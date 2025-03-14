@@ -1,5 +1,6 @@
 const axios = require("axios");
 const cheerio = require("cheerio");
+require("dotenv").config();
 
 const URL = "https://l-tike.com/st1/l-web-gs_mlts2025/sitetop";
 const { LINE_NOTIFY_TOKEN } = process.env;
@@ -16,8 +17,6 @@ async function checkTicketStatus() {
 
     if ($("body").text().includes("発売中")) {
       await sendLineNotification("チケットが発売されたかも！")
-    } else {
-      await sendLineNotification("チケットがない！")
     }
   } catch (error) {
     console.error(`エラー: ${error.message}`);
