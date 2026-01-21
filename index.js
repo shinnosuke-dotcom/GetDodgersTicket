@@ -18,7 +18,8 @@ async function checkTicketStatus() {
     const occurrences = $("body").text().split(keyword).length - 1;
 
     if (occurrences < 20) {
-      await sendLine("イープラスの状況が変わりました！");
+      await sendLine("イープラスの状況が変わりました！"+"\n"+URL);
+      console.log("通知を送信しました。");
     }
   } catch (error) {
     console.error(`エラー: ${error.message}`);
