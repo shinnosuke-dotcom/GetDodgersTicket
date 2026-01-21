@@ -2,8 +2,7 @@ const axios = require("axios");
 const cheerio = require("cheerio");
 require("dotenv").config();
 
-const URL = "https://l-tike.com/st1/l-web-gs_mlts2025/sitetop";
-const { LINE_NOTIFY_TOKEN } = process.env;
+const URL = "https://eplus.jp/sf/detail/0260360001";
 
 async function checkTicketStatus() {
   try {
@@ -15,29 +14,15 @@ async function checkTicketStatus() {
     });
     const $ = cheerio.load(response.data);
 
-    if ($("body").text().includes("発売中")) {
-      await sendLineNotification("チケットが発売されたかも！")
+    const keyword = "予定枚数終了";
+    const occurrences = $("body").text().split(keyword).length - 1;
+
+    if (occurrences < 20) {
+      await sendLineNotification("「予定枚数終了」の文言が18個以下になりました！");
     }
   } catch (error) {
     console.error(`エラー: ${error.message}`);
   }
 }
-
-const sendLineNotification = async (message) => {
-  try {
-    await axios.post(
-      "https://notify-api.line.me/api/notify",
-      new URLSearchParams({ message }),
-      {
-        headers: {
-          Authorization: `Bearer ${LINE_NOTIFY_TOKEN}`,
-          "Content-Type": "application/x-www-form-urlencoded",
-        },
-      }
-    );
-  } catch (error) {
-    console.error("LINE通知の送信中にエラーが発生しました:", error);
-  }
-};
 
 checkTicketStatus();
