@@ -18,11 +18,35 @@ async function checkTicketStatus() {
     const occurrences = $("body").text().split(keyword).length - 1;
 
     if (occurrences < 20) {
-      await sendLineNotification("「予定枚数終了」の文言が規定値以下になりました！");
+      await sendLine("イープラスの状況が変わりました！");
     }
   } catch (error) {
     console.error(`エラー: ${error.message}`);
   }
+}
+
+const ACCESS_TOKEN = process.env.LINE_CHANNEL_ACCESS_TOKEN;
+const LINE_USER_ID = process.env.LINE_USER_ID;
+
+async function sendLine(message) {
+  const res = await fetch(
+    "https://api.line.me/v2/bot/message/broadcast",
+    {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json; charset=UTF-8",
+        Authorization: `Bearer ${ACCESS_TOKEN}`,
+      },
+      body: JSON.stringify({
+        "messages":[
+          {
+              "type":"text",
+              "text": message
+          }
+      ]
+      }),
+    }
+  );
 }
 
 checkTicketStatus();
