@@ -18,7 +18,7 @@ async function checkTicketStatus() {
     const occurrences = $("body").text().split(keyword).length - 1;
 
     if (occurrences < 20) {
-      await sendLineNotification("「予定枚数終了」の文言が18個以下になりました！");
+      await sendLineNotification("「予定枚数終了」の文言が規定値以下になりました！");
     }
   } catch (error) {
     console.error(`エラー: ${error.message}`);
