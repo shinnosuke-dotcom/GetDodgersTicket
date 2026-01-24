@@ -3,6 +3,7 @@ const cheerio = require("cheerio");
 require("dotenv").config();
 
 const URL = "https://eplus.jp/sf/detail/0260360001";
+const ACCESS_TOKEN = process.env.LINE_CHANNEL_ACCESS_TOKEN;
 
 async function checkTicketStatus() {
   try {
@@ -24,14 +25,12 @@ async function checkTicketStatus() {
     }
   } catch (error) {
     console.error(`エラー: ${error.message}`);
+    throw new Error("チケット状況の確認に失敗しました");
   }
 }
 
-const ACCESS_TOKEN = process.env.LINE_CHANNEL_ACCESS_TOKEN;
-const LINE_USER_ID = process.env.LINE_USER_ID;
-
 async function sendLine(message) {
-  const res = await fetch("https://api.line.me/v2/bot/message/broadcast", {
+  await fetch("https://api.line.me/v2/bot/message/broadcast", {
     method: "POST",
     headers: {
       "Content-Type": "application/json; charset=UTF-8",
@@ -45,7 +44,15 @@ async function sendLine(message) {
         },
       ],
     }),
-  });
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("LINE通知に失敗しました");
+      }
+    })
+    .catch((error) => {
+      throw new Error(error.message);
+    });
 }
 
 checkTicketStatus();
