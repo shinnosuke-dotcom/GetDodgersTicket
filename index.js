@@ -28,15 +28,18 @@ async function checkTicketStatus1() {
     });
 
     // JS実行後のテキストを取得
-    const text = await page.evaluate(() => document.body.innerText);
+    const text = await page.evaluate(() => document.body.innerText);    
+    const patterns = [
+      /6\n金\n19:00\n0件/g,
+      /7\n土\n19:00\n0件/g,
+      /8\n日\n19:00\n0件/g,
+      /10\n火\n19:00\n0件/g,
+    ];
+    const matchCount = patterns.filter((regex) => (text.match(regex) || []).length > 0).length;
 
-    const count = (text.match(/0件/g) || []).length;
-    console.log(`「0件」の数: ${count}`);
-
-    // ★ 14件未満のときに通知
-    if (count < 14) {
+    if (matchCount < 4) {
       await sendLine(
-        `【WBC2026 リセール通知】\n「0件」が ${count} 件です\n${URL1}`
+      `【WBC2026 リセール通知】出品された可能性があります。\n${URL1}`
       );
       console.log("通知を送信しました。");
     }
