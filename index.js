@@ -66,7 +66,7 @@ async function checkTicketStatus2() {
     const keyword = "予定枚数終了";
     const occurrences = $("body").text().split(keyword).length - 1;
 
-    if (occurrences < 20) {
+    if (occurrences < 18) {
       await sendLine("イープラスの状況が変わりました！" + "\n" + URL2);
       console.log("通知を送信しました。");
     }
