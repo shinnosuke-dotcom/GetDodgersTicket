@@ -30,14 +30,13 @@ async function checkTicketStatus1() {
     // JS実行後のテキストを取得
     const text = await page.evaluate(() => document.body.innerText);    
     const patterns = [
-      /6\n金\n19:00\n0件/g,
       /7\n土\n19:00\n0件/g,
       /8\n日\n19:00\n0件/g,
       /10\n火\n19:00\n0件/g,
     ];
     const matchCount = patterns.filter((regex) => (text.match(regex) || []).length > 0).length;
 
-    if (matchCount < 4) {
+    if (matchCount < 3) {
       await sendLine(
       `【WBC2026 リセール通知】出品された可能性があります。\n${URL1}`
       );
