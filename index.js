@@ -100,4 +100,4 @@ async function sendLine(message) {
 }
 
 checkTicketStatus1();
-checkTicketStatus2();
+//checkTicketStatus2();
